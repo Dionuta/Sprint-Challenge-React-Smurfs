@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import './App.css';
 import SmurfForm from './components/SmurfForm';
 import Smurfs from './components/Smurfs';
-import axios from 'axios'
+import Nav from './components/Nav';
+
+import axios from 'axios';
+import {Route} from 'react-router-dom'
+
 
 class App extends Component {
   constructor(props) {
@@ -20,13 +24,18 @@ class App extends Component {
     .then( res => {this.setState({smurfs: res.data})})
     .catch(err => console.log(err));
   }
+
+  updateSmurfs = newSmurfs => {
+    this.setState({ smurfs: newSmurfs});
+  };
   
   
   render() {
     return (
       <div className="App">
-        <SmurfForm />
-        <Smurfs smurfs={this.state.smurfs} />
+        <Route path='/' component={Nav}/>
+        <Route path='/add' exact render={props => <SmurfForm {...props } smurfs={this.state.smurfs} updateSmurfs={this.updateSmurfs}/>}/>
+        <Route path='/' exact render={props => <Smurfs {...props} smurfs={this.state.smurfs} updateSmurfs={this.updateSmurfs} />}/>
       </div>
     );
   }
